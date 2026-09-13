@@ -37,17 +37,6 @@
       margin-top: 20px;
       font-weight: bold;
     }
-
-    button {
-      width: 100%;
-      padding: 16px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 10px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
   </style>
 </head>
 
@@ -89,31 +78,18 @@
 
         lector.stop().then(function() {
 
-          if (window.opener) {
+          const appUrl =
+            "https://script.google.com/macros/s/AKfycbzalUX3UtPm0JrSIztBS3D0dcAuAuSgA_Tk8JiHxeEhD0TeXAXV-PeWx1eQ6D90cvHV/exec";
 
-            window.opener.postMessage(
-              {
-                tipo: "codigoBarras",
-                codigo: codigo
-              },
-              "*"
-            );
-
-            window.close();
-
-          } else {
-
-            document.getElementById("mensaje").textContent =
-              "Código detectado: " + codigo;
-
-          }
+          window.location.href =
+            appUrl + "?barcode=" + encodeURIComponent(codigo);
 
         });
 
       },
 
       function(error) {
-        // Sigue buscando el código.
+        // Continúa buscando mientras no encuentre un código.
       }
 
     ).catch(function(error) {
