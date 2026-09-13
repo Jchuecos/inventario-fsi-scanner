@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Lector de código - Inventario FSI</title>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: #f4f6f8;
+    }
+
+    .contenedor {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    #lector {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    #mensaje {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <h1>📷 LECTOR DE CÓDIGO</h1>
+
+  <p>Apunte la cámara hacia el código de barras.</p>
+
+  <div id="lector"></div>
+
+  <div id="mensaje">Iniciando cámara...</div>
+
+</div>
+
+<script>
+
+  const lector = new Html5Qrcode("lector");
+
+  function iniciarCamara() {
+
+    lector.start(
+      { facingMode: "environment" },
+
+      {
+        fps: 10,
+        qrbox: {
+          width: 300,
+          height: 150
+        }
+      },
+
+      function(codigo) {
+
+        document.getElementById("mensaje").textContent =
+          "Código detectado: " + codigo;
+
+        lector.stop().then(function() {
+
+          if (window.opener) {
+
+            window.opener.postMessage(
+              {
+                tipo: "codigoBarras",
+                codigo: codigo
+              },
+              "*"
+            );
+
+            window.close();
+
+          } else {
+
+            document.getElementById("mensaje").textContent =
+              "Código detectado: " + codigo;
+
+          }
+
+        });
+
+      },
+
+      function(error) {
+        // Sigue buscando el código.
+      }
+
+    ).catch(function(error) {
+
+      document.getElementById("mensaje").textContent =
+        "No se pudo abrir la cámara. Verifique el permiso de cámara.";
+
+      console.error(error);
+
+    });
+
+  }
+
+  iniciarCamara();
+
+</script>
+
+</body>
+</html>
