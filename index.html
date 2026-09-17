@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>Lector de código - Inventario FSI</title>
 
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
+  </script>
 
   <style>
     body {
@@ -22,6 +29,7 @@
       background: white;
       padding: 20px;
       border-radius: 18px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
     }
 
     h1 {
@@ -37,75 +45,122 @@
       margin-top: 20px;
       font-weight: bold;
     }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 
 <body>
 
-<div class="contenedor">
+  <div class="contenedor">
 
-  <h1>📷 LECTOR DE CÓDIGO</h1>
+    <h1>📷 LECTOR DE CÓDIGO</h1>
 
-  <p>Apunte la cámara hacia el código de barras.</p>
+    <div id="lector"></div>
 
-  <div id="lector"></div>
+    <div id="mensaje">
+      Iniciando cámara...
+    </div>
 
-  <div id="mensaje">Iniciando cámara...</div>
+  </div>
 
-</div>
+  <script>
 
-<script>
+    const appUrl =
+      "https://script.google.com/macros/s/AKfycbzalUX3UtPm0JrSIztBS3D0dcAuAuSgA_Tk8JiHxeEhD0TeXAXV-PeWx1eQ6D90cvHV/exec";
 
-  const lector = new Html5Qrcode("lector");
+    let lector;
+    let codigoDetectado = false;
 
-  function iniciarCamara() {
 
-    lector.start(
-      { facingMode: "environment" },
+    function iniciarCamara() {
 
-      {
+      lector = new Html5Qrcode("lector");
+
+      const configuracion = {
         fps: 10,
         qrbox: {
-          width: 300,
+          width: 280,
           height: 150
         }
-      },
+      };
 
-      function(codigo) {
+
+      lector.start(
+        {
+          facingMode: "environment"
+        },
+
+        configuracion,
+
+        function(codigo) {
+
+          // Evitar que el mismo código se procese varias veces
+          if (codigoDetectado) {
+            return;
+          }
+
+          codigoDetectado = true;
+
+          document.getElementById("mensaje").textContent =
+            "Código detectado: " + codigo;
+
+
+          lector.stop().then(function() {
+
+            // Ir directamente a Inventario FSI
+            window.location.href =
+              appUrl +
+              "?barcode=" +
+              encodeURIComponent(codigo);
+
+          }).catch(function(error) {
+
+            console.error(error);
+
+            // Si no logra detener la cámara,
+            // igualmente regresar a Inventario FSI
+            window.location.href =
+              appUrl +
+              "?barcode=" +
+              encodeURIComponent(codigo);
+
+          });
+
+        },
+
+        function(error) {
+
+          // Continúa buscando.
+          // No mostramos errores mientras está escaneando.
+
+        }
+
+      ).catch(function(error) {
 
         document.getElementById("mensaje").textContent =
-          "Código detectado: " + codigo;
+          "No se pudo abrir la cámara. Verifique el permiso de cámara.";
 
-        lector.stop().then(function() {
+        console.error(error);
 
-          const appUrl =
-            "https://script.google.com/macros/s/AKfycbzalUX3UtPm0JrSIztBS3D0dcAuAuSgA_Tk8JiHxeEhD0TeXAXV-PeWx1eQ6D90cvHV/exec";
+      });
 
-          window.location.href =
-            appUrl + "?barcode=" + encodeURIComponent(codigo);
+    }
 
-        });
 
-      },
+    iniciarCamara();
 
-      function(error) {
-        // Continúa buscando mientras no encuentre un código.
-      }
-
-    ).catch(function(error) {
-
-      document.getElementById("mensaje").textContent =
-        "No se pudo abrir la cámara. Verifique el permiso de cámara.";
-
-      console.error(error);
-
-    });
-
-  }
-
-  iniciarCamara();
-
-</script>
+  </script>
 
 </body>
+
 </html>
