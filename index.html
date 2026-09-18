@@ -116,36 +116,19 @@
 
 lector.stop().then(function() {
 
-  // Enviar el código a Inventario FSI
-  if (window.opener) {
-    window.opener.postMessage(
-      {
-        tipo: "codigoBarras",
-        codigo: codigo
-      },
-      "*"
-    );
-
-    window.close();
-  }
+  window.location.href =
+    appUrl +
+    "?barcode=" +
+    encodeURIComponent(codigo);
 
 }).catch(function(error) {
 
   console.error(error);
 
-  // Aunque haya un error al detener la cámara,
-  // enviamos igualmente el código a Inventario FSI
-  if (window.opener) {
-    window.opener.postMessage(
-      {
-        tipo: "codigoBarras",
-        codigo: codigo
-      },
-      "*"
-    );
-
-    window.close();
-  }
+  window.location.href =
+    appUrl +
+    "?barcode=" +
+    encodeURIComponent(codigo);
 
 });
 
