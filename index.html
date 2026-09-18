@@ -157,7 +157,28 @@
 
 
     iniciarCamara();
+window.addEventListener("message", function(event) {
 
+  if (event.origin !== "https://jchuecos.github.io") {
+    return;
+  }
+
+  if (!event.data || event.data.tipo !== "codigoBarras") {
+    return;
+  }
+
+  const codigo = String(event.data.codigo || "").trim();
+
+  if (!codigo) {
+    return;
+  }
+
+  document.getElementById("codigo").value = codigo;
+
+  mostrarBusqueda();
+  buscarPorCodigo();
+
+});
   </script>
 
 </body>
