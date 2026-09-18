@@ -114,26 +114,40 @@
             "Código detectado: " + codigo;
 
 
-          lector.stop().then(function() {
+lector.stop().then(function() {
 
-            // Ir directamente a Inventario FSI
-            window.location.href =
-              appUrl +
-              "?barcode=" +
-              encodeURIComponent(codigo);
+  // Enviar el código a Inventario FSI
+  if (window.opener) {
+    window.opener.postMessage(
+      {
+        tipo: "codigoBarras",
+        codigo: codigo
+      },
+      "*"
+    );
 
-          }).catch(function(error) {
+    window.close();
+  }
 
-            console.error(error);
+}).catch(function(error) {
 
-            // Si no logra detener la cámara,
-            // igualmente regresar a Inventario FSI
-            window.location.href =
-              appUrl +
-              "?barcode=" +
-              encodeURIComponent(codigo);
+  console.error(error);
 
-          });
+  // Aunque haya un error al detener la cámara,
+  // enviamos igualmente el código a Inventario FSI
+  if (window.opener) {
+    window.opener.postMessage(
+      {
+        tipo: "codigoBarras",
+        codigo: codigo
+      },
+      "*"
+    );
+
+    window.close();
+  }
+
+});
 
         },
 
@@ -156,27 +170,7 @@
     }
 
 
-    iniciarCamara();
-window.addEventListener("message", function(event) {
-
-  if (event.origin !== "https://jchuecos.github.io") {
-    return;
-  }
-
-  if (!event.data || event.data.tipo !== "codigoBarras") {
-    return;
-  }
-
-  const codigo = String(event.data.codigo || "").trim();
-
-  if (!codigo) {
-    return;
-  }
-
-  document.getElementById("codigo").value = codigo;
-
-  mostrarBusqueda();
-  buscarPorCodigo();
+ 
 
 });
   </script>
