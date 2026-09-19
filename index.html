@@ -113,25 +113,51 @@
           document.getElementById("mensaje").textContent =
             "Código detectado: " + codigo;
 
-
 lector.stop().then(function() {
 
-  window.location.href =
-    appUrl +
-    "?barcode=" +
-    encodeURIComponent(codigo);
+  if (window.opener) {
+
+    window.opener.postMessage(
+      {
+        tipo: "codigoBarras",
+        codigo: codigo
+      },
+      "*"
+    );
+
+  } else {
+
+    window.location.href =
+      appUrl +
+      "?barcode=" +
+      encodeURIComponent(codigo);
+
+  }
 
 }).catch(function(error) {
 
   console.error(error);
 
-  window.location.href =
-    appUrl +
-    "?barcode=" +
-    encodeURIComponent(codigo);
+  if (window.opener) {
+
+    window.opener.postMessage(
+      {
+        tipo: "codigoBarras",
+        codigo: codigo
+      },
+      "*"
+    );
+
+  } else {
+
+    window.location.href =
+      appUrl +
+      "?barcode=" +
+      encodeURIComponent(codigo);
+
+  }
 
 });
-
         },
 
         function(error) {
