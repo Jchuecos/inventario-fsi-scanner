@@ -21,13 +21,47 @@
   <meta name="theme-color"
         content="#ffffff">
 
-  <script>
-    window.location.href =
-      "https://script.google.com/macros/s/AKfycbzatHHrplP6lJEuWB_TU2wDrLKuClapzuNItpM8uGJGs5-bxCwlk9y5OQSLEZkaicXe/exec";
-  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding-top: 80px;
+    }
+
+    img {
+      width: 180px;
+      height: 180px;
+      border-radius: 30px;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
-  <p>Abriendo Inventario FSI...</p>
+
+  <img src="./FSI_icon_512x512.png">
+
+  <h2>Inventario FSI</h2>
+
+  <button onclick="abrirInventario()">
+    ABRIR INVENTARIO FSI
+  </button>
+
+  <script>
+    function abrirInventario() {
+      window.location.href =
+        "https://script.google.com/macros/s/AKfycbzatHHrplP6lJEuWB_TU2wDrLKuClapzuNItpM8uGJGs5-bxCwlk9y5OQSLEZkaicXe/exec";
+    }
+  </script>
+
 </body>
 </html>
