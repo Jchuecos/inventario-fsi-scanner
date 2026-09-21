@@ -1,0 +1,16 @@
+{
+  "name": "Inventario FSI",
+  "short_name": "Inventario FSI",
+  "start_url": "inventario.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "FSI_icon_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
